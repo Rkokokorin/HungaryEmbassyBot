@@ -1,19 +1,20 @@
 import json
-import time
 import random
 import sys
-from selenium import webdriver
+import time
+import tkinter as tk
+
+import undetected_chromedriver as uc
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
-import tkinter as tk
-from selenium.common.exceptions import NoSuchElementException
+
+from tlg import send_telegram_update
 
 SLEEP_SECONDS = 18000
-driver = webdriver.Chrome()
+driver = uc.Chrome()
 actionChains = ActionChains(driver)
 
 def read_json(path):
@@ -150,22 +151,22 @@ def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applic
     parent = label.find_element(By.XPATH, './..')
     checkbox = parent.find_element(By.XPATH, './/input[contains(@class, "form-check-input")]')
     checkbox.click()
-    time.sleep(1)
+    emulate_human()
 
     saveTypeElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
     actionChains.move_to_element(saveTypeElement).click().perform()
-    time.sleep(1)
+    emulate_human()
 
     nameElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
     actionChains.move_to_element(nameElement).click().send_keys(applicantName).perform()
-    time.sleep(1)
+    emulate_human()
 
     birthDateElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
     actionChains.move_to_element(birthDateElement).click().send_keys(applicantDOB).perform()
-    time.sleep(1)
+    emulate_human()
 
     try:
         applicantsElement = WebDriverWait(driver, 2).until(
@@ -178,32 +179,32 @@ def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applic
     phoneElement = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Phone")]')) )
     actionChains.move_to_element(phoneElement).click().send_keys(applicantPhone).perform()
-    time.sleep(1)
+    emulate_human()
 
     emailElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
     actionChains.move_to_element(emailElement).click().send_keys(applicantEmail).perform()
-    time.sleep(1)
+    emulate_human()
 
     label = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Re-enter")]')) )
     actionChains.move_to_element(label).click().send_keys(applicantEmail).perform()
-    time.sleep(1)
+    emulate_human()
 
     countryElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
     actionChains.move_to_element(countryElement).click().send_keys(aplicantCountry).perform()
-    time.sleep(1)
+    emulate_human()
 
     residence = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "residence")]')) )
     actionChains.move_to_element(residence).click().send_keys(aplicantResidencePermit).perform()
-    time.sleep(1)
+    emulate_human()
 
     passportNumberElement = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Passport number")]')) )
     actionChains.move_to_element(passportNumberElement).click().send_keys(applicantPassport).perform()
-    time.sleep(1)
+    emulate_human()
 
 
     checkbox1Element = WebDriverWait(driver, 10).until(
@@ -241,10 +242,11 @@ def startsb():
         subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(),entCountry.get(), entResidence)
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
-            time.sleep(random.randint(80, 100))
+            time.sleep(random.randint(200, 300))
             startsb()
     else:
-        time.sleep(SLEEP_SECONDS + random.randint(0, 200))
+        send_telegram_update()
+        time.sleep(15000)
 
 def startbgsb():
     belgrade(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), entCountry.get(), entResidence.get())
@@ -258,6 +260,11 @@ def startbgsb():
                 time.sleep(SLEEP_SECONDS)
     else:
         time.sleep(SLEEP_SECONDS)
+
+def emulate_human():
+    time.sleep(1)
+    actionChains.move_by_offset(random.randint(3, 20),random.randint(2,10)).perform()
+    time.sleep(1)
 
 def stop():
     driver.close()
