@@ -16,6 +16,8 @@ from tlg import send_telegram_update
 SLEEP_SECONDS = 18000
 driver = uc.Chrome()
 actionChains = ActionChains(driver)
+option = driver.options
+
 
 def read_json(path):
     try:
@@ -234,6 +236,8 @@ def startbg():
         time.sleep(1800)
 
 def startsb():
+    option.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
+    option.add_argument("Accept-Language=en-US,en;q=0.9")
     if var.get():
         json_data = read_json(entPath.get())
         subotica(json_data.get("name"), json_data.get("birth_date"), json_data.get("count"),
@@ -241,7 +245,7 @@ def startsb():
     else:
         subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(),entCountry.get(), entResidence)
     time.sleep(5)
-    if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
+    if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button"):
             time.sleep(random.randint(200, 300))
             startsb()
     else:
