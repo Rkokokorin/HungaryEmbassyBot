@@ -1,3 +1,4 @@
+import json
 import time
 import random
 import sys
@@ -9,12 +10,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 import tkinter as tk
-from win10toast import ToastNotifier
 from selenium.common.exceptions import NoSuchElementException
 
-toast = ToastNotifier()
-driver = webdriver.Chrome() 
+SLEEP_SECONDS = 18000
+driver = webdriver.Chrome()
 actionChains = ActionChains(driver)
+
+def read_json(path):
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"Файл {path} не найден.")
+    except json.JSONDecodeError:
+        print(f"Ошибка декодирования JSON в файле {path}.")
+    return None
 
 def check_exists_by_xpath(xpath):
     try:
@@ -106,7 +116,7 @@ def belgrade (applicantName, applicantDOB, applicantCount, applicantPhone, appli
     errorElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
 
-def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applicantEmail, applicantPassport):
+def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applicantEmail, applicantPassport, aplicantCountry, aplicantResidencePermit):
 
     if driver.current_url == "https://konzinfobooking.mfa.gov.hu":
          driver.close()
@@ -117,61 +127,94 @@ def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applic
     locationElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"label1\"]/button")))
     actionChains.move_to_element(locationElement).click().perform()
-
     inputLocationElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div/div[2]/div[1]/input")))
     actionChains.move_to_element(inputLocationElement).click().send_keys("serbia").perform()
-    suboticaElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modal2\"]/div/div/div[2]/div[84]/label")))
-    actionChains.move_to_element(suboticaElement).click().perform()
+    label = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Subotica")]')) )
+    parent = label.find_element(By.XPATH, './..')
+    checkbox = parent.find_element(By.XPATH, './/input[@class="form-check-input"]')
+    actionChains.move_to_element(checkbox).click().perform()
 
     visaTypeElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[contains(@data-target, '#modalCases')]")))
     actionChains.move_to_element(visaTypeElement).click().perform()
 
+
     inputVisaTypeElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/div/div/div/div[2]/div[1]/input")))
     actionChains.move_to_element(inputVisaTypeElement).click().send_keys("Visa").perform()
-    visaCElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[2]/div[36]/label")))
-    actionChains.move_to_element(visaCElement).click().perform()
+    label = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Schengen")]'))
+    )
+    parent = label.find_element(By.XPATH, './..')
+    checkbox = parent.find_element(By.XPATH, './/input[contains(@class, "form-check-input")]')
+    checkbox.click()
+    time.sleep(1)
 
     saveTypeElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
     actionChains.move_to_element(saveTypeElement).click().perform()
+    time.sleep(1)
 
     nameElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
     actionChains.move_to_element(nameElement).click().send_keys(applicantName).perform()
+    time.sleep(1)
 
     birthDateElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
     actionChains.move_to_element(birthDateElement).click().send_keys(applicantDOB).perform()
+    time.sleep(1)
 
-    applicantsElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
-    driver.find_element(By.XPATH, "//*[@id='label6']").clear()
-    actionChains.move_to_element(applicantsElement).click().send_keys(applicantCount).perform()
+    try:
+        applicantsElement = WebDriverWait(driver, 2).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
+        driver.find_element(By.XPATH, "//*[@id='label6']").clear()
+        actionChains.move_to_element(applicantsElement).click().send_keys(applicantCount).perform()
+    except(Exception,):
+        print("")
 
     phoneElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label9']")))
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Phone")]')) )
     actionChains.move_to_element(phoneElement).click().send_keys(applicantPhone).perform()
+    time.sleep(1)
 
     emailElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
     actionChains.move_to_element(emailElement).click().send_keys(applicantEmail).perform()
+    time.sleep(1)
+
+    label = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Re-enter")]')) )
+    actionChains.move_to_element(label).click().send_keys(applicantEmail).perform()
+    time.sleep(1)
+
+    countryElement = WebDriverWait(driver, 10).until(
+    EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
+    actionChains.move_to_element(countryElement).click().send_keys(aplicantCountry).perform()
+    time.sleep(1)
+
+    residence = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "residence")]')) )
+    actionChains.move_to_element(residence).click().send_keys(aplicantResidencePermit).perform()
+    time.sleep(1)
 
     passportNumberElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label1000']")))
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Passport number")]')) )
     actionChains.move_to_element(passportNumberElement).click().send_keys(applicantPassport).perform()
+    time.sleep(1)
+
 
     checkbox1Element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='slabel13']")))
     actionChains.move_to_element(checkbox1Element).click().perform()
+    time.sleep(3)
 
     checkbox2Element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label13']")))
     actionChains.move_to_element(checkbox2Element).click().perform()
+    time.sleep(3)
 
     saveElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
@@ -187,109 +230,34 @@ def startbg():
             time.sleep(random.randint(80, 100))
             startbg()
     else:
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade, 30 minutes to take it",
-        duration = 20,
-        threaded = True,
-        )
         time.sleep(1800)
 
 def startsb():
-    subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get())
+    if var.get():
+        json_data = read_json(entPath.get())
+        subotica(json_data.get("name"), json_data.get("birth_date"), json_data.get("count"),
+                 json_data.get("phone"), json_data.get("email"), json_data.get("passport"),"Russian Federation",json_data.get("residence_permit"))
+    else:
+        subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(),entCountry.get(), entResidence)
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
             time.sleep(random.randint(80, 100))
             startsb()
     else:
-        toast.show_toast(
-        "Embassy slot found!",
-        "Subotica",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Subotica",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Subotica",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(1800)   
+        time.sleep(SLEEP_SECONDS + random.randint(0, 200))
 
 def startbgsb():
     belgrade(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), entCountry.get(), entResidence.get())
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
             time.sleep(random.randint(80, 100))
-            subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get())
+            subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), "Russian Federation", entResidence.get())
             if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
                 time.sleep(random.randint(80, 100))
                 startbgsb()
             else:
-                toast.show_toast(
-                "Embassy slot found!",
-                "Subotica",
-                duration = 20,
-                threaded = True,
-                )
-                time.sleep(20)
-                toast.show_toast(
-                "Embassy slot found!",
-                "Subotica",
-                duration = 20,
-                threaded = True,
-                )
-                time.sleep(20)
-                toast.show_toast(
-                "Embassy slot found!",
-                "Subotica",
-                duration = 20,
-                threaded = True,
-                )
-                time.sleep(1800)    
+                time.sleep(SLEEP_SECONDS)
     else:
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(20)
-        toast.show_toast(
-        "Embassy slot found!",
-        "Belgrade",
-        duration = 20,
-        threaded = True,
-        )
-        time.sleep(1800)
+        time.sleep(SLEEP_SECONDS)
 
 def stop():
     driver.close()
@@ -312,10 +280,13 @@ lblEmail = tk.Label(master=frmEntry, text="Email")
 entEmail = tk.Entry(master=frmEntry, width=30)
 lblPassport = tk.Label(master=frmEntry, text="Номер паспорта | XXXXXXXXX")
 entPassport = tk.Entry(master=frmEntry, width=30)
-lblCountry = tk.Label(master=frmEntry, text="(Только Белград) Гражданство | Russian Federation")
+lblCountry = tk.Label(master=frmEntry, text="Гражданство | Russian Federation")
 entCountry = tk.Entry(master=frmEntry, width=30)
-lblResidence = tk.Label(master=frmEntry, text="(Только Белград) Номер и дата окончания ВНЖ | A000000 ДД.ММ.ГГГГ")
+lblResidence = tk.Label(master=frmEntry, text="Номер и дата окончания ВНЖ | A000000 ДД.ММ.ГГГГ")
 entResidence = tk.Entry(master=frmEntry, width=30)
+
+lblPath = tk.Label(master=frmEntry, text="Absolute file path(optional)")
+entPath = tk.Entry(master=frmEntry, width=30)
 
 lblName.grid(row=0, column=0, sticky="e")
 entName.grid(row=0, column=1, sticky="w")
@@ -333,6 +304,17 @@ lblCountry.grid(row=6, column=0, sticky="e")
 entCountry.grid(row=6, column=1, sticky="w")
 lblResidence.grid(row=7, column=0, sticky="e")
 entResidence.grid(row=7, column=1, sticky="w")
+
+lblPath.grid(row=8, column=0, sticky="e")
+entPath.grid(row=8, column=1, sticky="w")
+
+var = tk.BooleanVar(value=False)
+
+chkReadJson = tk.Checkbutton(
+    master=window,
+    text="Read json",
+    variable=var
+)
 
 btnBelgrade = tk.Button(
     master=window,
@@ -356,9 +338,10 @@ btnStop = tk.Button(
 )
 
 frmEntry.grid(row=0, column=0, padx=10)
-btnBelgrade.grid(row=0, column=1, pady=10)
 btnSubotica.grid(row=0, column=2, pady=10)
-btnBelgradeSubotica.grid(row=0, column=3, pady=10)
+chkReadJson.grid(row=1, column=4, pady=10)
 btnStop.grid(row=0, column=4, padx=10)
 
 window.mainloop()
+
+
