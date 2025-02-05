@@ -13,9 +13,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from tlg import send_telegram_update
 
+MFA_GOV_HU = "https://konzinfobooking.mfa.gov.hu"
 SLEEP_SECONDS = 18000
+
 driver = uc.Chrome()
-actionChains = ActionChains(driver)
+action_chains = ActionChains(driver)
 option = driver.options
 
 
@@ -36,90 +38,90 @@ def check_exists_by_xpath(xpath):
         return False
     return True
 
-def belgrade (applicantName, applicantDOB, applicantCount, applicantPhone, applicantEmail, applicantPassport, applicantCountry, applicantResidence):
+def belgrade (applicant_name, applicant_dob, applicant_count, applicant_phone, applicant_email, applicant_passport, applicant_country, applicant_residence):
     
-    if driver.current_url == "https://konzinfobooking.mfa.gov.hu":
+    if driver.current_url == ("%s" % MFA_GOV_HU):
          driver.close()
-         driver.get("https://konzinfobooking.mfa.gov.hu")
+         driver.get("%s" % MFA_GOV_HU)
     else:
-         driver.get("https://konzinfobooking.mfa.gov.hu")
-    
-    
+         driver.get("%s" % MFA_GOV_HU)
+
     locationElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"label1\"]/button")))
-    actionChains.move_to_element(locationElement).click().perform()
+    action_chains.move_to_element(locationElement).click().perform()
 
-    inputLocationElement = WebDriverWait(driver, 10).until(
+    input_location_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div/div[2]/div[1]/input")))
-    actionChains.move_to_element(inputLocationElement).click().send_keys("serbia").perform()
-    belgradeElement = WebDriverWait(driver, 10).until(
+    action_chains.move_to_element(input_location_element).click().send_keys("serbia").perform()
+    belgrade_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modal2\"]/div/div/div[2]/div[83]/label")))
-    actionChains.move_to_element(belgradeElement).click().perform()
+    action_chains.move_to_element(belgrade_element).click().perform()
 
-    visaTypeElement = WebDriverWait(driver, 10).until(
+    visa_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[contains(@data-target, '#modalCases')]")))
-    actionChains.move_to_element(visaTypeElement).click().perform()
+    action_chains.move_to_element(visa_type_element).click().perform()
 
-    inputVisaTypeElement = WebDriverWait(driver, 10).until(
+    input_visa_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/div/div/div/div[2]/div[1]/input")))
-    actionChains.move_to_element(inputVisaTypeElement).click().send_keys("Visa").perform()
-    visaCElement = WebDriverWait(driver, 10).until(
+    action_chains.move_to_element(input_visa_type_element).click().send_keys("Visa").perform()
+    visa_c_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[2]/div[40]/label")))
-    actionChains.move_to_element(visaCElement).click().perform()
+    action_chains.move_to_element(visa_c_element).click().perform()
 
-    saveTypeElement = WebDriverWait(driver, 10).until(
+    save_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
-    actionChains.move_to_element(saveTypeElement).click().perform()
+    action_chains.move_to_element(save_type_element).click().perform()
 
     nameElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
-    actionChains.move_to_element(nameElement).click().send_keys(applicantName).perform()
+    action_chains.move_to_element(nameElement).click().send_keys(applicant_name).perform()
 
-    birthDateElement = WebDriverWait(driver, 10).until(
+    birth_date_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
-    actionChains.move_to_element(birthDateElement).click().send_keys(applicantDOB).perform()
+    action_chains.move_to_element(birth_date_element).click().send_keys(applicant_dob).perform()
 
-    applicantsElement = WebDriverWait(driver, 10).until(
+    applicants_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
     driver.find_element(By.XPATH, "//*[@id='label6']").clear()
-    actionChains.move_to_element(applicantsElement).click().send_keys(applicantCount).perform()
+    action_chains.move_to_element(applicants_element).click().send_keys(applicant_count).perform()
 
-    phoneElement = WebDriverWait(driver, 10).until(
+    phone_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label9']")))
-    actionChains.move_to_element(phoneElement).click().send_keys(applicantPhone).perform()
+    action_chains.move_to_element(phone_element).click().send_keys(applicant_phone).perform()
 
-    emailElement = WebDriverWait(driver, 10).until(
+    email_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
-    actionChains.move_to_element(emailElement).click().send_keys(applicantEmail).perform()
+    action_chains.move_to_element(email_element).click().send_keys(applicant_email).perform()
 
     passportNumberElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label1000']")))
-    actionChains.move_to_element(passportNumberElement).click().send_keys(applicantPassport).perform()
+    action_chains.move_to_element(passportNumberElement).click().send_keys(applicant_passport).perform()
 
     countryElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
-    actionChains.move_to_element(countryElement).click().send_keys(applicantCountry).perform()
+    action_chains.move_to_element(countryElement).click().send_keys(applicant_country).perform()
 
     residenceElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label1002']")))
-    actionChains.move_to_element(residenceElement).click().send_keys(applicantResidence).perform()
+    action_chains.move_to_element(residenceElement).click().send_keys(applicant_residence).perform()
 
     checkbox1Element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='slabel13']")))
-    actionChains.move_to_element(checkbox1Element).click().perform()
+    action_chains.move_to_element(checkbox1Element).click().perform()
 
     checkbox2Element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label13']")))
-    actionChains.move_to_element(checkbox2Element).click().perform()
+    action_chains.move_to_element(checkbox2Element).click().perform()
 
     saveElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
-    actionChains.move_to_element(saveElement).click().perform()
+    action_chains.move_to_element(saveElement).click().perform()
 
     errorElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
 
-def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applicantEmail, applicantPassport, aplicantCountry, aplicantResidencePermit):
+def subotica(applicant_name, applicant_dob, applicant_count, applicant_phone, applicant_email, applicant_passport, applicant_country,
+             applicant_residence_permit):
 
     if driver.current_url == "https://konzinfobooking.mfa.gov.hu":
          driver.close()
@@ -129,24 +131,21 @@ def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applic
 
     locationElement = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"label1\"]/button")))
-    actionChains.move_to_element(locationElement).click().perform()
-    inputLocationElement = WebDriverWait(driver, 10).until(
+    action_chains.move_to_element(locationElement).click().perform()
+    input_location_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div/div[2]/div[1]/input")))
-    actionChains.move_to_element(inputLocationElement).click().send_keys("serbia").perform()
+    action_chains.move_to_element(input_location_element).click().send_keys("serbia").perform()
     label = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Subotica")]')) )
     parent = label.find_element(By.XPATH, './..')
     checkbox = parent.find_element(By.XPATH, './/input[@class="form-check-input"]')
-    actionChains.move_to_element(checkbox).click().perform()
-
-    visaTypeElement = WebDriverWait(driver, 10).until(
+    action_chains.move_to_element(checkbox).click().perform()
+    visa_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[contains(@data-target, '#modalCases')]")))
-    actionChains.move_to_element(visaTypeElement).click().perform()
-
-
-    inputVisaTypeElement = WebDriverWait(driver, 10).until(
+    action_chains.move_to_element(visa_type_element).click().perform()
+    input_visa_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/div/div/div/div[2]/div[1]/input")))
-    actionChains.move_to_element(inputVisaTypeElement).click().send_keys("Visa").perform()
+    action_chains.move_to_element(input_visa_type_element).click().send_keys("Visa").perform()
     label = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Schengen")]'))
     )
@@ -155,79 +154,79 @@ def subotica(applicantName, applicantDOB, applicantCount, applicantPhone, applic
     checkbox.click()
     emulate_human()
 
-    saveTypeElement = WebDriverWait(driver, 10).until(
+    save_type_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
-    actionChains.move_to_element(saveTypeElement).click().perform()
+    action_chains.move_to_element(save_type_element).click().perform()
     emulate_human()
 
-    nameElement = WebDriverWait(driver, 10).until(
+    name_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
-    actionChains.move_to_element(nameElement).click().send_keys(applicantName).perform()
+    action_chains.move_to_element(name_element).click().send_keys(applicant_name).perform()
     emulate_human()
 
-    birthDateElement = WebDriverWait(driver, 10).until(
+    birth_date_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
-    actionChains.move_to_element(birthDateElement).click().send_keys(applicantDOB).perform()
+    action_chains.move_to_element(birth_date_element).click().send_keys(applicant_dob).perform()
     emulate_human()
 
     try:
-        applicantsElement = WebDriverWait(driver, 2).until(
+        applicants_element = WebDriverWait(driver, 2).until(
         EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
         driver.find_element(By.XPATH, "//*[@id='label6']").clear()
-        actionChains.move_to_element(applicantsElement).click().send_keys(applicantCount).perform()
+        action_chains.move_to_element(applicants_element).click().send_keys(applicant_count).perform()
     except(Exception,):
         print("")
 
-    phoneElement = WebDriverWait(driver, 10).until(
+    phone_element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Phone")]')) )
-    actionChains.move_to_element(phoneElement).click().send_keys(applicantPhone).perform()
+    action_chains.move_to_element(phone_element).click().send_keys(applicant_phone).perform()
     emulate_human()
 
-    emailElement = WebDriverWait(driver, 10).until(
+    email_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
-    actionChains.move_to_element(emailElement).click().send_keys(applicantEmail).perform()
+    action_chains.move_to_element(email_element).click().send_keys(applicant_email).perform()
     emulate_human()
 
     label = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Re-enter")]')) )
-    actionChains.move_to_element(label).click().send_keys(applicantEmail).perform()
+    action_chains.move_to_element(label).click().send_keys(applicant_email).perform()
     emulate_human()
 
-    countryElement = WebDriverWait(driver, 10).until(
+    country_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
-    actionChains.move_to_element(countryElement).click().send_keys(aplicantCountry).perform()
+    action_chains.move_to_element(country_element).click().send_keys(applicant_country).perform()
     emulate_human()
 
     residence = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "residence")]')) )
-    actionChains.move_to_element(residence).click().send_keys(aplicantResidencePermit).perform()
+    action_chains.move_to_element(residence).click().send_keys(applicant_residence_permit).perform()
     emulate_human()
 
-    passportNumberElement = WebDriverWait(driver, 10).until(
+    passport_number_element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Passport number")]')) )
-    actionChains.move_to_element(passportNumberElement).click().send_keys(applicantPassport).perform()
+    action_chains.move_to_element(passport_number_element).click().send_keys(applicant_passport).perform()
     emulate_human()
 
 
-    checkbox1Element = WebDriverWait(driver, 10).until(
+    checkbox1_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='slabel13']")))
-    actionChains.move_to_element(checkbox1Element).click().perform()
+    action_chains.move_to_element(checkbox1_element).click().perform()
     time.sleep(3)
 
-    checkbox2Element = WebDriverWait(driver, 10).until(
+    checkbox2_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id='label13']")))
-    actionChains.move_to_element(checkbox2Element).click().perform()
+    action_chains.move_to_element(checkbox2_element).click().perform()
     time.sleep(3)
 
-    saveElement = WebDriverWait(driver, 10).until(
+    save_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
-    actionChains.move_to_element(saveElement).click().perform()
+    action_chains.move_to_element(save_element).click().perform()
 
-    errorElement = WebDriverWait(driver, 10).until(
+    error_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
 
 def startbg():
-    belgrade(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), entCountry.get(), entResidence.get())
+    belgrade(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence.get())
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
             time.sleep(random.randint(80, 100))
@@ -239,11 +238,11 @@ def startsb():
     option.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
     option.add_argument("Accept-Language=en-US,en;q=0.9")
     if var.get():
-        json_data = read_json(entPath.get())
+        json_data = read_json(ent_path.get())
         subotica(json_data.get("name"), json_data.get("birth_date"), json_data.get("count"),
                  json_data.get("phone"), json_data.get("email"), json_data.get("passport"),"Russian Federation",json_data.get("residence_permit"))
     else:
-        subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(),entCountry.get(), entResidence)
+        subotica(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence)
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button"):
             time.sleep(random.randint(200, 300))
@@ -253,10 +252,10 @@ def startsb():
         time.sleep(15000)
 
 def startbgsb():
-    belgrade(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), entCountry.get(), entResidence.get())
+    belgrade(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence.get())
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
             time.sleep(random.randint(80, 100))
-            subotica(entName.get(), entDOB.get(), entCount.get(), entPhone.get(), entEmail.get(), entPassport.get(), "Russian Federation", entResidence.get())
+            subotica(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), "Russian Federation", ent_residence.get())
             if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") == True:
                 time.sleep(random.randint(80, 100))
                 startbgsb()
@@ -267,7 +266,7 @@ def startbgsb():
 
 def emulate_human():
     time.sleep(1)
-    actionChains.move_by_offset(random.randint(3, 20),random.randint(2,10)).perform()
+    action_chains.move_by_offset(random.randint(3, 20), random.randint(2, 10)).perform()
     time.sleep(1)
 
 def stop():
@@ -279,79 +278,79 @@ window.title("Embassy Slot Requester")
 window.resizable(width=False, height=False)
 
 frmEntry = tk.Frame(master=window)
-lblName = tk.Label(master=frmEntry, text="Имя и Фамилия")
-entName = tk.Entry(master=frmEntry, width=30)
-lblDOB = tk.Label(master=frmEntry, text="Дата рождения ДД.ММ.ГГГГ")
-entDOB = tk.Entry(master=frmEntry, width=30)
-lblCount = tk.Label(master=frmEntry, text="Количество подающих")
-entCount = tk.Entry(master=frmEntry, width=30)
-lblPhone = tk.Label(master=frmEntry, text="Номер телефона")
-entPhone = tk.Entry(master=frmEntry, width=30)
-lblEmail = tk.Label(master=frmEntry, text="Email")
-entEmail = tk.Entry(master=frmEntry, width=30)
-lblPassport = tk.Label(master=frmEntry, text="Номер паспорта | XXXXXXXXX")
-entPassport = tk.Entry(master=frmEntry, width=30)
-lblCountry = tk.Label(master=frmEntry, text="Гражданство | Russian Federation")
-entCountry = tk.Entry(master=frmEntry, width=30)
-lblResidence = tk.Label(master=frmEntry, text="Номер и дата окончания ВНЖ | A000000 ДД.ММ.ГГГГ")
-entResidence = tk.Entry(master=frmEntry, width=30)
+lbl_name = tk.Label(master=frmEntry, text="Имя и Фамилия")
+ent_name = tk.Entry(master=frmEntry, width=30)
+lbl_dob = tk.Label(master=frmEntry, text="Дата рождения ДД.ММ.ГГГГ")
+ent_dob = tk.Entry(master=frmEntry, width=30)
+lbl_count = tk.Label(master=frmEntry, text="Количество подающих")
+ent_count = tk.Entry(master=frmEntry, width=30)
+lbl_phone = tk.Label(master=frmEntry, text="Номер телефона")
+ent_phone = tk.Entry(master=frmEntry, width=30)
+lbl_email = tk.Label(master=frmEntry, text="Email")
+ent_email = tk.Entry(master=frmEntry, width=30)
+lbl_passport = tk.Label(master=frmEntry, text="Номер паспорта | XXXXXXXXX")
+ent_passport = tk.Entry(master=frmEntry, width=30)
+lbl_country = tk.Label(master=frmEntry, text="Гражданство | Russian Federation")
+ent_country = tk.Entry(master=frmEntry, width=30)
+lbl_residence = tk.Label(master=frmEntry, text="Номер и дата окончания ВНЖ | A000000 ДД.ММ.ГГГГ")
+ent_residence = tk.Entry(master=frmEntry, width=30)
 
-lblPath = tk.Label(master=frmEntry, text="Absolute file path(optional)")
-entPath = tk.Entry(master=frmEntry, width=30)
+lbl_path = tk.Label(master=frmEntry, text="Absolute file path(optional)")
+ent_path = tk.Entry(master=frmEntry, width=30)
 
-lblName.grid(row=0, column=0, sticky="e")
-entName.grid(row=0, column=1, sticky="w")
-lblDOB.grid(row=1, column=0, sticky="e")
-entDOB.grid(row=1, column=1, sticky="w")
-lblCount.grid(row=2, column=0, sticky="e")
-entCount.grid(row=2, column=1, sticky="w")
-lblPhone.grid(row=3, column=0, sticky="e")
-entPhone.grid(row=3, column=1, sticky="w")
-lblEmail.grid(row=4, column=0, sticky="e")
-entEmail.grid(row=4, column=1, sticky="w")
-lblPassport.grid(row=5, column=0, sticky="e")
-entPassport.grid(row=5, column=1, sticky="w")
-lblCountry.grid(row=6, column=0, sticky="e")
-entCountry.grid(row=6, column=1, sticky="w")
-lblResidence.grid(row=7, column=0, sticky="e")
-entResidence.grid(row=7, column=1, sticky="w")
+lbl_name.grid(row=0, column=0, sticky="e")
+ent_name.grid(row=0, column=1, sticky="w")
+lbl_dob.grid(row=1, column=0, sticky="e")
+ent_dob.grid(row=1, column=1, sticky="w")
+lbl_count.grid(row=2, column=0, sticky="e")
+ent_count.grid(row=2, column=1, sticky="w")
+lbl_phone.grid(row=3, column=0, sticky="e")
+ent_phone.grid(row=3, column=1, sticky="w")
+lbl_email.grid(row=4, column=0, sticky="e")
+ent_email.grid(row=4, column=1, sticky="w")
+lbl_passport.grid(row=5, column=0, sticky="e")
+ent_passport.grid(row=5, column=1, sticky="w")
+lbl_country.grid(row=6, column=0, sticky="e")
+ent_country.grid(row=6, column=1, sticky="w")
+lbl_residence.grid(row=7, column=0, sticky="e")
+ent_residence.grid(row=7, column=1, sticky="w")
 
-lblPath.grid(row=8, column=0, sticky="e")
-entPath.grid(row=8, column=1, sticky="w")
+lbl_path.grid(row=8, column=0, sticky="e")
+ent_path.grid(row=8, column=1, sticky="w")
 
 var = tk.BooleanVar(value=False)
 
-chkReadJson = tk.Checkbutton(
+chk_read_json = tk.Checkbutton(
     master=window,
     text="Read json",
     variable=var
 )
 
-btnBelgrade = tk.Button(
+btn_belgrade = tk.Button(
     master=window,
     text="Start Belgrade",
     command=startbg
 )
-btnSubotica = tk.Button(
+btn_subotica = tk.Button(
     master=window,
     text="Start Subotica",
     command=startsb
 )
-btnBelgradeSubotica = tk.Button(
+btn_belgrade_subotica = tk.Button(
     master=window,
     text="Start Belgrade and Subotica",
     command=startbgsb
 )
-btnStop = tk.Button(
+btn_stop = tk.Button(
     master=window,
     text="Exit",
     command=stop
 )
 
 frmEntry.grid(row=0, column=0, padx=10)
-btnSubotica.grid(row=0, column=2, pady=10)
-chkReadJson.grid(row=1, column=4, pady=10)
-btnStop.grid(row=0, column=4, padx=10)
+btn_subotica.grid(row=0, column=2, pady=10)
+chk_read_json.grid(row=1, column=4, pady=10)
+btn_stop.grid(row=0, column=4, padx=10)
 
 window.mainloop()
 
