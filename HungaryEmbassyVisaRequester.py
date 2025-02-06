@@ -221,11 +221,13 @@ def subotica(applicant_name, applicant_dob, applicant_count, applicant_phone, ap
         save_element = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
         action_chains.move_to_element(save_element).click().perform()
+        error_element = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
     except(Exception,):
         send_telegram_update(FAIL_MESSAGE_TELEGRAM)
         print("FAIL_MESSAGE_TELEGRAM")
-    error_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
+        sys.exit(-1)
+
 
 def startbg():
     belgrade(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence.get())
@@ -248,9 +250,15 @@ def startsb():
         subotica(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence)
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button"):
-            time.sleep(random.randint(200, 300))
+            i = 90
+            if 1 <= time.localtime().tm_hour <= 6:
+                print("Night mode")
+                i = 15000
+            time.sleep(random.randint(i, int(i * 1.3)))
             startsb()
     else:
+        send_telegram_update(SUCCESS_MESSAGE_TELEGRAM)
+        time.sleep(15)
         send_telegram_update(SUCCESS_MESSAGE_TELEGRAM)
         time.sleep(15000)
 
