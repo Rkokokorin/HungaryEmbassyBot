@@ -5,6 +5,7 @@ import requests
 JSON_TELEGRAM_OPTIONS_PATH = "bot.json"
 
 SUCCESS_MESSAGE_TELEGRAM = "POSSIBLY TIME FOUND, CHECK PC"
+FAIL_MESSAGE_TELEGRAM = "BOT NEEDS TO BE RESTARTED"
 
 
 def get_chat_id():
@@ -13,11 +14,10 @@ def get_chat_id():
     url = f"https://api.telegram.org/bot{token}/getUpdates"
     print(requests.get(url).json())
 
-def send_telegram_update():
+def send_telegram_update(message):
     object1 = read_json(JSON_TELEGRAM_OPTIONS_PATH)
     token = object1.get("token")
     chat_id = object1.get("chat_id")
-    message = SUCCESS_MESSAGE_TELEGRAM
     url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}"
     print(requests.get(url).json())
 
@@ -33,4 +33,4 @@ def read_json(path):
 
 if __name__ == '__main__':
     get_chat_id()
-    send_telegram_update()
+    send_telegram_update(SUCCESS_MESSAGE_TELEGRAM)

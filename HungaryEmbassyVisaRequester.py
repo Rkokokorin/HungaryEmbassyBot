@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from tlg import send_telegram_update
+from tlg import send_telegram_update, SUCCESS_MESSAGE_TELEGRAM, FAIL_MESSAGE_TELEGRAM
 
 MFA_GOV_HU = "https://konzinfobooking.mfa.gov.hu"
 SLEEP_SECONDS = 18000
@@ -122,106 +122,108 @@ def belgrade (applicant_name, applicant_dob, applicant_count, applicant_phone, a
 
 def subotica(applicant_name, applicant_dob, applicant_count, applicant_phone, applicant_email, applicant_passport, applicant_country,
              applicant_residence_permit):
-
-    if driver.current_url == "https://konzinfobooking.mfa.gov.hu":
-         driver.close()
-         driver.get("https://konzinfobooking.mfa.gov.hu")
-    else:
-         driver.get("https://konzinfobooking.mfa.gov.hu")
-
-    locationElement = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id=\"label1\"]/button")))
-    action_chains.move_to_element(locationElement).click().perform()
-    input_location_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div/div[2]/div[1]/input")))
-    action_chains.move_to_element(input_location_element).click().send_keys("serbia").perform()
-    label = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Subotica")]')) )
-    parent = label.find_element(By.XPATH, './..')
-    checkbox = parent.find_element(By.XPATH, './/input[@class="form-check-input"]')
-    action_chains.move_to_element(checkbox).click().perform()
-    visa_type_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//button[contains(@data-target, '#modalCases')]")))
-    action_chains.move_to_element(visa_type_element).click().perform()
-    input_visa_type_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/div/div/div/div[2]/div[1]/input")))
-    action_chains.move_to_element(input_visa_type_element).click().send_keys("Visa").perform()
-    label = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Schengen")]'))
-    )
-    parent = label.find_element(By.XPATH, './..')
-    checkbox = parent.find_element(By.XPATH, './/input[contains(@class, "form-check-input")]')
-    checkbox.click()
-    emulate_human()
-
-    save_type_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
-    action_chains.move_to_element(save_type_element).click().perform()
-    emulate_human()
-
-    name_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
-    action_chains.move_to_element(name_element).click().send_keys(applicant_name).perform()
-    emulate_human()
-
-    birth_date_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
-    action_chains.move_to_element(birth_date_element).click().send_keys(applicant_dob).perform()
-    emulate_human()
-
     try:
-        applicants_element = WebDriverWait(driver, 2).until(
-        EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
-        driver.find_element(By.XPATH, "//*[@id='label6']").clear()
-        action_chains.move_to_element(applicants_element).click().send_keys(applicant_count).perform()
+        if driver.current_url == "https://konzinfobooking.mfa.gov.hu":
+             driver.close()
+             driver.get("https://konzinfobooking.mfa.gov.hu")
+        else:
+             driver.get("https://konzinfobooking.mfa.gov.hu")
+
+        locationElement = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id=\"label1\"]/button")))
+        action_chains.move_to_element(locationElement).click().perform()
+        input_location_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div/div[2]/div[1]/input")))
+        action_chains.move_to_element(input_location_element).click().send_keys("serbia").perform()
+        label = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Subotica")]')) )
+        parent = label.find_element(By.XPATH, './..')
+        checkbox = parent.find_element(By.XPATH, './/input[@class="form-check-input"]')
+        action_chains.move_to_element(checkbox).click().perform()
+        visa_type_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//button[contains(@data-target, '#modalCases')]")))
+        action_chains.move_to_element(visa_type_element).click().perform()
+        input_visa_type_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/app/div/div/div[4]/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/div/div/div/div[2]/div[1]/input")))
+        action_chains.move_to_element(input_visa_type_element).click().send_keys("Visa").perform()
+        label = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Schengen")]'))
+        )
+        parent = label.find_element(By.XPATH, './..')
+        checkbox = parent.find_element(By.XPATH, './/input[contains(@class, "form-check-input")]')
+        checkbox.click()
+        emulate_human()
+
+        save_type_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id=\"modalCases\"]/div/div/div[3]/button[2]")))
+        action_chains.move_to_element(save_type_element).click().perform()
+        emulate_human()
+
+        name_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='label4']")))
+        action_chains.move_to_element(name_element).click().send_keys(applicant_name).perform()
+        emulate_human()
+
+        birth_date_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='birthDate']")))
+        action_chains.move_to_element(birth_date_element).click().send_keys(applicant_dob).perform()
+        emulate_human()
+
+        try:
+            applicants_element = WebDriverWait(driver, 2).until(
+            EC.visibility_of_element_located((By.XPATH, "//*[@id='label6']")))
+            driver.find_element(By.XPATH, "//*[@id='label6']").clear()
+            action_chains.move_to_element(applicants_element).click().send_keys(applicant_count).perform()
+        except(Exception,):
+            print("")
+
+        phone_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Phone")]')) )
+        action_chains.move_to_element(phone_element).click().send_keys(applicant_phone).perform()
+        emulate_human()
+
+        email_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
+        action_chains.move_to_element(email_element).click().send_keys(applicant_email).perform()
+        emulate_human()
+
+        label = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Re-enter")]')) )
+        action_chains.move_to_element(label).click().send_keys(applicant_email).perform()
+        emulate_human()
+
+        country_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
+        action_chains.move_to_element(country_element).click().send_keys(applicant_country).perform()
+        emulate_human()
+
+        residence = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "residence")]')) )
+        action_chains.move_to_element(residence).click().send_keys(applicant_residence_permit).perform()
+        emulate_human()
+
+        passport_number_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Passport number")]')) )
+        action_chains.move_to_element(passport_number_element).click().send_keys(applicant_passport).perform()
+        emulate_human()
+
+
+        checkbox1_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='slabel13']")))
+        action_chains.move_to_element(checkbox1_element).click().perform()
+        time.sleep(3)
+
+        checkbox2_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//*[@id='label13']")))
+        action_chains.move_to_element(checkbox2_element).click().perform()
+        time.sleep(3)
+
+        save_element = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
+        action_chains.move_to_element(save_element).click().perform()
     except(Exception,):
-        print("")
-
-    phone_element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Phone")]')) )
-    action_chains.move_to_element(phone_element).click().send_keys(applicant_phone).perform()
-    emulate_human()
-
-    email_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label10']")))
-    action_chains.move_to_element(email_element).click().send_keys(applicant_email).perform()
-    emulate_human()
-
-    label = WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Re-enter")]')) )
-    action_chains.move_to_element(label).click().send_keys(applicant_email).perform()
-    emulate_human()
-
-    country_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label1001']")))
-    action_chains.move_to_element(country_element).click().send_keys(applicant_country).perform()
-    emulate_human()
-
-    residence = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "residence")]')) )
-    action_chains.move_to_element(residence).click().send_keys(applicant_residence_permit).perform()
-    emulate_human()
-
-    passport_number_element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//label[contains(text(), "Passport number")]')) )
-    action_chains.move_to_element(passport_number_element).click().send_keys(applicant_passport).perform()
-    emulate_human()
-
-
-    checkbox1_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='slabel13']")))
-    action_chains.move_to_element(checkbox1_element).click().perform()
-    time.sleep(3)
-
-    checkbox2_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//*[@id='label13']")))
-    action_chains.move_to_element(checkbox2_element).click().perform()
-    time.sleep(3)
-
-    save_element = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.XPATH, "//button[@class='btn btn-primary w-100']")))
-    action_chains.move_to_element(save_element).click().perform()
-
+        send_telegram_update(FAIL_MESSAGE_TELEGRAM)
+        print("FAIL_MESSAGE_TELEGRAM")
     error_element = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//*[@id=\"Torles\"]/div/div/div[1]/div")))
 
@@ -237,6 +239,7 @@ def startbg():
 def startsb():
     option.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
     option.add_argument("Accept-Language=en-US,en;q=0.9")
+    print("run: " + time.ctime())
     if var.get():
         json_data = read_json(ent_path.get())
         subotica(json_data.get("name"), json_data.get("birth_date"), json_data.get("count"),
@@ -248,7 +251,7 @@ def startsb():
             time.sleep(random.randint(200, 300))
             startsb()
     else:
-        send_telegram_update()
+        send_telegram_update(SUCCESS_MESSAGE_TELEGRAM)
         time.sleep(15000)
 
 def startbgsb():
