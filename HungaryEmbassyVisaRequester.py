@@ -13,6 +13,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from tlg import send_telegram_update, SUCCESS_MESSAGE_TELEGRAM, FAIL_MESSAGE_TELEGRAM
 
+RANDOM_MAX_MULTIPLIER = 1.3
+
+NIGHT_MODE_SLEEP_TIME = 1800
+
+SLEEP_TIME_BETWEEN_REQUESTS = 200
+
 MFA_GOV_HU = "https://konzinfobooking.mfa.gov.hu"
 SLEEP_SECONDS = 18000
 
@@ -249,12 +255,12 @@ def startsb():
     else:
         subotica(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence)
     time.sleep(5)
-    if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button"):
-            i = 120
+    if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button") and check_exists_by_xpath("//div[contains(text(), \"no appointments available\")]"):
+            i = SLEEP_TIME_BETWEEN_REQUESTS
             if 1 <= time.localtime().tm_hour <= 6:
                 print("Night mode")
-                i = 1800
-            time.sleep(random.randint(i, int(i * 1.3)))
+                i = NIGHT_MODE_SLEEP_TIME
+            time.sleep(random.randint(i, int(i * RANDOM_MAX_MULTIPLIER)))
             startsb()
     else:
         send_telegram_update(SUCCESS_MESSAGE_TELEGRAM)
