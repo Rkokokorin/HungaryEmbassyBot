@@ -23,6 +23,8 @@ NIGHT_MODE_SLEEP_TIME = 1800
 
 SLEEP_TIME_BETWEEN_REQUESTS = 200
 
+SLEEP_TIME_BETWEEN_REQUESTS_WEEK_END = 600
+
 MFA_GOV_HU = "https://konzinfobooking.mfa.gov.hu"
 SLEEP_SECONDS = 18000
 
@@ -179,6 +181,9 @@ def startsb():
     if 1 <= time.localtime().tm_hour <= 6:
         print("Night mode")
         i = NIGHT_MODE_SLEEP_TIME
+    if time.localtime().tm_wday > 4:
+        print("Week end mode")
+        i = SLEEP_TIME_BETWEEN_REQUESTS_WEEK_END
     time.sleep(random.randint(i, int(i * RANDOM_MAX_MULTIPLIER)))
     startsb()
 
