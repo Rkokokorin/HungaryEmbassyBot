@@ -250,10 +250,10 @@ def startsb():
         subotica(ent_name.get(), ent_dob.get(), ent_count.get(), ent_phone.get(), ent_email.get(), ent_passport.get(), ent_country.get(), ent_residence)
     time.sleep(5)
     if check_exists_by_xpath("//*[@id=\"Torles\"]/div/div/div[2]/button"):
-            i = 90
+            i = 120
             if 1 <= time.localtime().tm_hour <= 6:
                 print("Night mode")
-                i = 15000
+                i = 1800
             time.sleep(random.randint(i, int(i * 1.3)))
             startsb()
     else:
