@@ -21,7 +21,7 @@ RANDOM_MAX_MULTIPLIER = 1.3
 
 NIGHT_MODE_SLEEP_TIME = 1800
 
-SLEEP_TIME_BETWEEN_REQUESTS = 200
+SLEEP_TIME_BETWEEN_REQUESTS = 160
 
 SLEEP_TIME_BETWEEN_REQUESTS_WEEK_END = 600
 
@@ -169,6 +169,12 @@ def startsb():
     option.add_argument("Accept-Language=en-US,en;q=0.9")
     print("run: " + time.ctime())
     i = SLEEP_TIME_BETWEEN_REQUESTS
+    if time.localtime().tm_wday > 4:
+        print("Week end mode")
+        i = SLEEP_TIME_BETWEEN_REQUESTS_WEEK_END
+    if 1 <= time.localtime().tm_hour <= 6:
+        print("Night mode")
+        i = NIGHT_MODE_SLEEP_TIME
     if varSub.get():
         is_belgrade = False
         run_check_city(is_belgrade)
@@ -178,12 +184,6 @@ def startsb():
             time.sleep(random.randint(i, int(i * RANDOM_MAX_MULTIPLIER)))
         is_belgrade = True
         run_check_city(is_belgrade)
-    if 1 <= time.localtime().tm_hour <= 6:
-        print("Night mode")
-        i = NIGHT_MODE_SLEEP_TIME
-    if time.localtime().tm_wday > 4:
-        print("Week end mode")
-        i = SLEEP_TIME_BETWEEN_REQUESTS_WEEK_END
     time.sleep(random.randint(i, int(i * RANDOM_MAX_MULTIPLIER)))
     startsb()
 
